@@ -1,0 +1,106 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+b[0-9]+'
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    runs-on: macos-26
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build universal binary
+        run: |
+          xcodebuild -scheme <#MCP-Server#> -configuration Release -destination 'platform=macOS' ONLY_ACTIVE_ARCH=NO
+          DERIVED_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "<#MCP-Server#>-*" -type d -maxdepth 1 | head -1)
+          mkdir -p ./build
+          cp "$DERIVED_DATA/Build/Products/Release/<#mcp-server#>" ./build/<#mcp-server#>
+
+      - name: Create tarball and SHA256
+        run: |
+          cd ./build
+          tar -czf <#mcp-server#>-macos.tar.gz <#mcp-server#>
+          shasum -a 256 <#mcp-server#>-macos.tar.gz | tee <#mcp-server#>-macos.tar.gz.sha256
+          mv <#mcp-server#>-macos.tar.gz $GITHUB_WORKSPACE/
+          mv <#mcp-server#>-macos.tar.gz.sha256 $GITHUB_WORKSPACE/
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: |
+            <#mcp-server#>-macos.tar.gz
+            <#mcp-server#>-macos.tar.gz.sha256
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build for Linux
+        run: |
+          swift package resolve
+
+          swift build -c release
+
+      - name: Create tarball
+        run: |
+          BUILD_DIR=$(swift build -c release --show-bin-path)
+          cd $BUILD_DIR
+          tar -czf <#mcp-server#>-linux.tar.gz <#mcp-server#>
+          shasum -a 256 <#mcp-server#>-linux.tar.gz > <#mcp-server#>-linux.tar.gz.sha256
+          mv <#mcp-server#>-linux.tar.gz $GITHUB_WORKSPACE/
+          mv <#mcp-server#>-linux.tar.gz.sha256 $GITHUB_WORKSPACE/
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: |
+            <#mcp-server#>-linux.tar.gz
+            <#mcp-server#>-linux.tar.gz.sha256
+
+  release:
+    needs: [build-macos, build-linux]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-build
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-build
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            <#mcp-server#>-macos.tar.gz
+            <#mcp-server#>-macos.tar.gz.sha256
+            <#mcp-server#>-linux.tar.gz
+            <#mcp-server#>-linux.tar.gz.sha256
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: Release ${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

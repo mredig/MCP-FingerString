@@ -4,12 +4,42 @@ A minimal, well-structured Swift MCP (Model Context Protocol) server template.
 
 ## TLDR - Quick Start
 
+**Install via Homebrew:** (macOS only)
+Use brew to get the [pizza tool package](https://github.com/mredig/homebrew-pizza-mcp-tools), containing this (and other tools). (this is optimistic that the tool will be included in these tools)
+
+```bash
+brew tap <#YOUR_GITHUB_USERNAME#>/pizza-mcp-tools
+brew update
+brew install <#mcp-server#>
+```
+
+**Or build from source:**
 ```bash
 # Clone and build
 git clone <your-repo-url>
 cd <#MCP-Server#>
 swift build
+```
 
+**Add to Zed settings** (`~/.config/zed/settings.json`): (recommended)
+
+(In Zed, `Add Custom Server` and provide the following snippet)
+```json
+{
+  /// The name of your MCP server
+  "<#mcp-server#>": {
+    /// The command which runs the MCP server
+    "command": "<#mcp-server#>", // if building yourself, you'll need to provide the whole path
+    /// The arguments to pass to the MCP server
+    "args": [],
+    /// The environment variables to set
+    "env": {}
+  }
+}
+```
+
+**or Claude Desktop**
+```json
 # Add to Claude Desktop config at:
 # ~/Library/Application Support/Claude/claude_desktop_config.json
 {
