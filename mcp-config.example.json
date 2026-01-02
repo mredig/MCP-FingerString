@@ -1,0 +1,9 @@
+{
+	"mcpServers": {
+		"<#mcp-server#>": {
+			"command": "/path/to/<#MCP-Server#>/.build/debug/<#mcp-server#>",
+			"args": [],
+			"env": {}
+		}
+	}
+}
