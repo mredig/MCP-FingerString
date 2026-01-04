@@ -11,13 +11,13 @@ public enum Entrypoint {
 			return handler
 		}
 
-		let logger = Logger(label: "<#com.mcp-server#>")
+		let logger = Logger(label: "pizza.appsby.mcp-fingerstring")
 
-		logger.info("Starting <#MCP-Server#>...")
+		logger.info("Starting MCP-FingerString...")
 
 		// Create the MCP server with capabilities
 		let server = Server(
-			name: "<#MCP-Server#>",
+			name: "MCP-FingerString",
 			version: "1.0.0",
 			capabilities: .init(
 				resources: .init(subscribe: true, listChanged: true),
@@ -41,11 +41,11 @@ public enum Entrypoint {
 			logger: logger
 		)
 
-		logger.info("<#MCP-Server#> initialized and ready")
+		logger.info("MCP-FingerString initialized and ready")
 
 		// Run the service group - this blocks until shutdown signal
 		try await serviceGroup.run()
 
-		logger.info("<#MCP-Server#> shutdown complete")
+		logger.info("MCP-FingerString shutdown complete")
 	}
 }

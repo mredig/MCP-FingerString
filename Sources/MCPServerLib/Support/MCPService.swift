@@ -12,7 +12,7 @@ struct MCPService: Service {
 	init(server: Server, transport: Transport, logger: Logger? = nil) {
 		self.server = server
 		self.transport = transport
-		self.logger = logger ?? Logger(label: "<#com.mcp-server#>.mcp-service")
+		self.logger = logger ?? Logger(label: "pizza.appsby.mcp-fingerstring.mcp-service")
 	}
 
 	func run() async throws {

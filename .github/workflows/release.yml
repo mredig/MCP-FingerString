@@ -19,26 +19,26 @@ jobs:
 
       - name: Build universal binary
         run: |
-          xcodebuild -scheme <#MCP-Server#> -configuration Release -destination 'platform=macOS' ONLY_ACTIVE_ARCH=NO
-          DERIVED_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "<#MCP-Server#>-*" -type d -maxdepth 1 | head -1)
+          xcodebuild -scheme MCP-FingerString -configuration Release -destination 'platform=macOS' ONLY_ACTIVE_ARCH=NO
+          DERIVED_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "fingerstring-*" -type d -maxdepth 1 | head -1)
           mkdir -p ./build
-          cp "$DERIVED_DATA/Build/Products/Release/<#mcp-server#>" ./build/<#mcp-server#>
+          cp "$DERIVED_DATA/Build/Products/Release/fingerstring" ./build/fingerstring
 
       - name: Create tarball and SHA256
         run: |
           cd ./build
-          tar -czf <#mcp-server#>-macos.tar.gz <#mcp-server#>
-          shasum -a 256 <#mcp-server#>-macos.tar.gz | tee <#mcp-server#>-macos.tar.gz.sha256
-          mv <#mcp-server#>-macos.tar.gz $GITHUB_WORKSPACE/
-          mv <#mcp-server#>-macos.tar.gz.sha256 $GITHUB_WORKSPACE/
+          tar -czf fingerstring-macos.tar.gz fingerstring
+          shasum -a 256 fingerstring-macos.tar.gz | tee fingerstring-macos.tar.gz.sha256
+          mv fingerstring-macos.tar.gz $GITHUB_WORKSPACE/
+          mv fingerstring-macos.tar.gz.sha256 $GITHUB_WORKSPACE/
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
           path: |
-            <#mcp-server#>-macos.tar.gz
-            <#mcp-server#>-macos.tar.gz.sha256
+            fingerstring-macos.tar.gz
+            fingerstring-macos.tar.gz.sha256
 
   build-linux:
     runs-on: ubuntu-latest
@@ -57,18 +57,18 @@ jobs:
         run: |
           BUILD_DIR=$(swift build -c release --show-bin-path)
           cd $BUILD_DIR
-          tar -czf <#mcp-server#>-linux.tar.gz <#mcp-server#>
-          shasum -a 256 <#mcp-server#>-linux.tar.gz > <#mcp-server#>-linux.tar.gz.sha256
-          mv <#mcp-server#>-linux.tar.gz $GITHUB_WORKSPACE/
-          mv <#mcp-server#>-linux.tar.gz.sha256 $GITHUB_WORKSPACE/
+          tar -czf fingerstring-linux.tar.gz fingerstring
+          shasum -a 256 fingerstring-linux.tar.gz > fingerstring-linux.tar.gz.sha256
+          mv fingerstring-linux.tar.gz $GITHUB_WORKSPACE/
+          mv fingerstring-linux.tar.gz.sha256 $GITHUB_WORKSPACE/
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
           path: |
-            <#mcp-server#>-linux.tar.gz
-            <#mcp-server#>-linux.tar.gz.sha256
+            fingerstring-linux.tar.gz
+            fingerstring-linux.tar.gz.sha256
 
   release:
     needs: [build-macos, build-linux]
@@ -93,10 +93,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            <#mcp-server#>-macos.tar.gz
-            <#mcp-server#>-macos.tar.gz.sha256
-            <#mcp-server#>-linux.tar.gz
-            <#mcp-server#>-linux.tar.gz.sha256
+            fingerstring-macos.tar.gz
+            fingerstring-macos.tar.gz.sha256
+            fingerstring-linux.tar.gz
+            fingerstring-linux.tar.gz.sha256
           tag_name: ${{ steps.version.outputs.VERSION }}
           name: Release ${{ steps.version.outputs.VERSION }}
           draft: false

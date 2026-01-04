@@ -5,34 +5,34 @@ import Logging
 
 final class MCPServerTests: XCTestCase {
     var logger: Logger!
-    
+
     override func setUp() async throws {
         logger = Logger(label: "com.mcp-server.tests")
         logger.logLevel = .debug
     }
-    
+
     // MARK: - Tool Tests
-    
+
     func testEchoTool() async throws {
         let server = createTestServer()
         await ServerHandlers.registerHandlers(on: server)
-        
+
         let (serverTransport, clientTransport) = await InMemoryTransport.createConnectedPair()
         try await server.start(transport: serverTransport)
-        
+
         // Create a client and connect
         let client = Client(name: "TestClient", version: "1.0.0")
         try await client.connect(transport: clientTransport)
-        
+
         // Test echo tool
         let (content, isError) = try await client.callTool(
             name: "echo",
             arguments: ["message": "Hello, World!"]
         )
-        
+
         XCTAssertFalse(isError ?? false, "Echo tool should not return an error")
         XCTAssertEqual(content.count, 1, "Should return one content item")
-        
+
         if case .text(let text) = content.first {
             // Verify it's valid JSON with the echo field
             XCTAssertTrue(text.contains("\"echo\""), "Should contain echo field")
@@ -40,32 +40,32 @@ final class MCPServerTests: XCTestCase {
         } else {
             XCTFail("Expected text content")
         }
-        
+
         await server.stop()
     }
-    
+
     func testGetTimestampTool() async throws {
         let server = createTestServer()
         await ServerHandlers.registerHandlers(on: server)
-        
+
         let (serverTransport, clientTransport) = await InMemoryTransport.createConnectedPair()
         try await server.start(transport: serverTransport)
-        
+
         let client = Client(name: "TestClient", version: "1.0.0")
         try await client.connect(transport: clientTransport)
-        
+
         let (content, isError) = try await client.callTool(
             name: "get-timestamp",
             arguments: [:]
         )
-        
+
         XCTAssertFalse(isError ?? false, "Timestamp tool should not return an error")
         XCTAssertEqual(content.count, 1, "Should return one content item")
-        
+
         if case .text(let text) = content.first {
             // Verify it's valid JSON with the timestamp field
             XCTAssertTrue(text.contains("\"timestamp\""), "Should contain timestamp field")
-            
+
             // Extract and validate the ISO 8601 timestamp from JSON
             if let data = text.data(using: .utf8),
                let json = try? JSONSerialization.jsonObject(with: data) as? [String: String],
@@ -78,34 +78,34 @@ final class MCPServerTests: XCTestCase {
         } else {
             XCTFail("Expected text content")
         }
-        
+
         await server.stop()
     }
-    
+
     // MARK: - Resource Tests
-    
+
     func testListResources() async throws {
         let server = createTestServer()
         await ServerHandlers.registerHandlers(on: server)
-        
+
         let (serverTransport, clientTransport) = await InMemoryTransport.createConnectedPair()
         try await server.start(transport: serverTransport)
-        
+
         let client = Client(name: "TestClient", version: "1.0.0")
         try await client.connect(transport: clientTransport)
-        
+
         let (resources, _) = try await client.listResources()
-        
+
         XCTAssertGreaterThan(resources.count, 0, "Should have resources available")
-        
+
         let uris = resources.map { $0.uri }
-        XCTAssertTrue(uris.contains("<#mcp-server://#>status"), "Should have status resource")
-        XCTAssertTrue(uris.contains("<#mcp-server://#>welcome"), "Should have welcome resource")
-        XCTAssertTrue(uris.contains("<#mcp-server://#>config"), "Should have config resource")
-        
+        XCTAssertTrue(uris.contains("mcp-fingerstring://status"), "Should have status resource")
+        XCTAssertTrue(uris.contains("mcp-fingerstring://welcome"), "Should have welcome resource")
+        XCTAssertTrue(uris.contains("mcp-fingerstring://config"), "Should have config resource")
+
         await server.stop()
     }
-    
+
     func testReadStatusResource() async throws {
         let server = createTestServer()
         await ServerHandlers.registerHandlers(on: server)
@@ -115,9 +115,9 @@ final class MCPServerTests: XCTestCase {
 
         let client = Client(name: "TestClient", version: "1.0.0")
         try await client.connect(transport: clientTransport)
-        
+
         // Test reading status resource
-        let statusContents = try await client.readResource(uri: "<#mcp-server://#>status")
+        let statusContents = try await client.readResource(uri: "mcp-fingerstring://status")
         XCTAssertEqual(statusContents.count, 1, "Should have one content item")
 
         if let firstStatusContent = statusContents.first, let text = firstStatusContent.text {
@@ -129,10 +129,10 @@ final class MCPServerTests: XCTestCase {
         } else {
             XCTFail("Expected text content")
         }
-        
+
         await server.stop()
     }
-    
+
     func testReadWelcomeResource() async throws {
         let server = createTestServer()
         await ServerHandlers.registerHandlers(on: server)
@@ -142,9 +142,9 @@ final class MCPServerTests: XCTestCase {
 
         let client = Client(name: "TestClient", version: "1.0.0")
         try await client.connect(transport: clientTransport)
-        
+
         // Test reading welcome resource
-        let welcomeContents = try await client.readResource(uri: "<#mcp-server://#>welcome")
+        let welcomeContents = try await client.readResource(uri: "mcp-fingerstring://welcome")
         XCTAssertEqual(welcomeContents.count, 1, "Should have one content item")
 
         if let firstWelcome = welcomeContents.first, let text = firstWelcome.text {
@@ -155,10 +155,10 @@ final class MCPServerTests: XCTestCase {
         } else {
             XCTFail("Expected text content")
         }
-        
+
         await server.stop()
     }
-    
+
     func testReadConfigResource() async throws {
         let server = createTestServer()
         await ServerHandlers.registerHandlers(on: server)
@@ -168,9 +168,9 @@ final class MCPServerTests: XCTestCase {
 
         let client = Client(name: "TestClient", version: "1.0.0")
         try await client.connect(transport: clientTransport)
-        
+
         // Test reading config resource
-        let configContents = try await client.readResource(uri: "<#mcp-server://#>config")
+        let configContents = try await client.readResource(uri: "mcp-fingerstring://config")
         XCTAssertEqual(configContents.count, 1, "Should have one content item")
 
         if let firstConfig = configContents.first, let text = firstConfig.text {
@@ -181,12 +181,12 @@ final class MCPServerTests: XCTestCase {
         } else {
             XCTFail("Expected text content")
         }
-        
+
         await server.stop()
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func createTestServer() -> Server {
         return Server(
             name: "TestServer",

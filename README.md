@@ -1,4 +1,4 @@
-# <#MCP-Server#>
+# MCP-FingerString
 
 A minimal, well-structured Swift MCP (Model Context Protocol) server template.
 
@@ -10,14 +10,14 @@ Use brew to get the [pizza tool package](https://github.com/mredig/homebrew-pizz
 ```bash
 brew tap <#YOUR_GITHUB_USERNAME#>/pizza-mcp-tools
 brew update
-brew install <#mcp-server#>
+brew install fingerstring
 ```
 
 **Or build from source:**
 ```bash
 # Clone and build
 git clone <your-repo-url>
-cd <#MCP-Server#>
+cd MCP-FingerString
 swift build
 ```
 
@@ -27,9 +27,9 @@ swift build
 ```json
 {
   /// The name of your MCP server
-  "<#mcp-server#>": {
+  "fingerstring": {
     /// The command which runs the MCP server
-    "command": "<#mcp-server#>", // if building yourself, you'll need to provide the whole path
+    "command": "fingerstring", // if building yourself, you'll need to provide the whole path
     /// The arguments to pass to the MCP server
     "args": [],
     /// The environment variables to set
@@ -44,8 +44,8 @@ swift build
 # ~/Library/Application Support/Claude/claude_desktop_config.json
 {
   "mcpServers": {
-    "<#mcp-server#>": {
-      "command": "/path/to/<#MCP-Server#>/.build/debug/<#mcp-server#>"
+    "fingerstring": {
+    "command": "/path/to/fingerstring/.build/debug/fingerstring"
     }
   }
 }
@@ -61,25 +61,25 @@ This is a generic MCP server template. To customize it for your specific project
 
 | Find | Replace With |
 |------|--------------|
-| `<#mcp-server#>` | Your executable name (e.g., `mcp-fingerstring`) |
+| `fingerstring` | Your executable name (e.g., `mcp-fingerstring`) |
 | `MCPServer` | Your module name in PascalCase (e.g., `MCPFingerString`) |
 | `MCPServerLib` | Your library module name (e.g., `MCPFingerStringLib`) |
-| `<#MCP-Server#>` | Your display name (e.g., `MCP-FingerString`) |
-| `<#com.mcp-server#>` | Your reverse domain identifier (e.g., `com.fingerstring.mcp`) |
-| `<#mcp-server://#>` | Your custom URI scheme (e.g., `fingerstring://`) |
+| `MCP-FingerString` | Your display name (e.g., `MCP-FingerString`) |
+| `pizza.appsby.mcp-fingerstring` | Your reverse domain identifier (e.g., `com.fingerstring.mcp`) |
+| `mcp-fingerstring://` | Your custom URI scheme (e.g., `fingerstring://`) |
 
 ### Quick Find and Replace
 
 Use this command to find all instances of the template strings:
 
 ```bash
-# Find all occurrences of "<#mcp-server#>"
+# Find all occurrences of "fingerstring"
 grep -r "mcp-server" --include="*.swift" --include="*.json" --include="Makefile" --include="README.md" Sources/ Tests/ *.json Makefile README.md 2>/dev/null
 
 # Find all occurrences of "MCPServer"
 grep -r "MCPServer" --include="*.swift" Sources/ Tests/ 2>/dev/null
 
-# Find all occurrences of "<#com.mcp-server#>"
+# Find all occurrences of "pizza.appsby.mcp-fingerstring"
 grep -r "com.mcp-server" --include="*.swift" Sources/ Tests/ 2>/dev/null
 ```
 
@@ -87,12 +87,12 @@ grep -r "com.mcp-server" --include="*.swift" Sources/ Tests/ 2>/dev/null
 
 The following files typically need customization:
 
-1. **Package.swift** - Update package name `<#MCP-Server#>`, product name `<#mcp-server#>`, and target names
+1. **Package.swift** - Update package name `fingerstring`, product name `fingerstring`, and target names
 2. **README.md** - Update title, description, and examples (especially the `<#..#>` placeholders)
-3. **Makefile** - Update executable name `<#mcp-server#>` and version display
-4. **mcp-config.example.json** - Update server identifier `<#mcp-server#>` and command path
-5. **Sources/MCPServerLib/Support/Entrypoint.swift** - Update server name `<#MCP-Server#>` and logger labels `<#com.mcp-server#>`
-6. **Sources/MCPServerLib/Support/ServerHandlers.swift** - Update logger labels `<#com.mcp-server#>` and resource URIs `<#mcp-server://#>`
+3. **Makefile** - Update executable name `fingerstring` and version display
+4. **mcp-config.example.json** - Update server identifier `fingerstring` and command path
+5. **Sources/MCPServerLib/Support/Entrypoint.swift** - Update server name `fingerstring` and logger labels `pizza.appsby.mcp-fingerstring`
+6. **Sources/MCPServerLib/Support/ServerHandlers.swift** - Update logger labels `pizza.appsby.mcp-fingerstring` and resource URIs `mcp-fingerstring://`
 7. **Sources/MCPServer/MCPMain.swift** - Update struct name and imports
 8. **Tests/MCPServerTests/** - Update class names, imports, and assertions
 
@@ -101,10 +101,10 @@ The following files typically need customization:
 ```bash
 # In your project directory, use sed to replace strings (macOS)
 find . -type f \( -name "*.swift" -o -name "*.json" -o -name "Makefile" -o -name "README.md" \) -exec sed -i '' \
-  -e 's/<#mcp-server#>/mcp-fingerstring/g' \
+  -e 's/fingerstring/mcp-fingerstring/g' \
   -e 's/MCPServer/MCPFingerString/g' \
   -e 's/MCPServerLib/MCPFingerStringLib/g' \
-  -e 's/<#MCP-Server#>/MCP-FingerString/g' \
+  -e 's/MCP-FingerString/MCP-FingerString/g' \
   -e 's/<#com\.mcp-server#>/com.fingerstring/g' \
   -e 's/<#mcp-server:\/\/#>/fingerstring:\/\//g' \
   {} +

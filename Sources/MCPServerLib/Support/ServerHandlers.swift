@@ -4,7 +4,7 @@ import Foundation
 
 /// ServerHandlers contains all MCP request handlers for tools, resources, and prompts
 enum ServerHandlers {
-	private static let logger = Logger(label: "<#com.mcp-server#>.mcp-handlers")
+	private static let logger = Logger(label: "pizza.appsby.mcp-fingerstring.mcp-handlers")
 
 	/// Registered tool implementations from the central registry
 	private static let toolImplementations = ToolRegistry.registeredTools
@@ -71,19 +71,19 @@ enum ServerHandlers {
 			let resources = [
 				Resource(
 					name: "Server Status",
-					uri: "<#mcp-server://#>status",
+					uri: "mcp-fingerstring://status",
 					description: "Current server status and statistics",
 					mimeType: "application/json"
 				),
 				Resource(
 					name: "Welcome Message",
-					uri: "<#mcp-server://#>welcome",
+					uri: "mcp-fingerstring://welcome",
 					description: "Welcome message and server information",
 					mimeType: "text/plain"
 				),
 				Resource(
 					name: "Server Configuration",
-					uri: "<#mcp-server://#>config",
+					uri: "mcp-fingerstring://config",
 					description: "Server configuration details",
 					mimeType: "application/json"
 				)
@@ -97,7 +97,7 @@ enum ServerHandlers {
 			logger.debug("Reading resource", metadata: ["uri": "\(params.uri)"])
 
 			switch params.uri {
-			case "<#mcp-server://#>status":
+			case "mcp-fingerstring://status":
 				let statusJson = """
 				{
 					"status": "healthy",
@@ -110,9 +110,9 @@ enum ServerHandlers {
 					.text(statusJson, uri: params.uri, mimeType: "application/json")
 				])
 
-			case "<#mcp-server://#>welcome":
+			case "mcp-fingerstring://welcome":
 				let welcome = """
-				Welcome to <#MCP-Server#>!
+				Welcome to MCP-FingerString!
 
 				This is a Model Context Protocol server built with Swift.
 				It provides tools, resources, and prompts for AI interaction.
@@ -123,10 +123,10 @@ enum ServerHandlers {
 					.text(welcome, uri: params.uri, mimeType: "text/plain")
 				])
 
-			case "<#mcp-server://#>config":
+			case "mcp-fingerstring://config":
 				let configJson = """
 				{
-					"name": "<#MCP-Server#>",
+					"name": "MCP-FingerString",
 					"version": "1.0.0",
 					"capabilities": {
 						"tools": true,
@@ -167,7 +167,7 @@ enum ServerHandlers {
 			logger.info("Shutdown request received - preparing to exit")
 			Task {
 				guard let server else {
-					throw NSError(domain: "<#com.mcp-server#>", code: 1)
+					throw NSError(domain: "pizza.appsby.mcp-fingerstring", code: 1)
 				}
 				try await Task.sleep(for: .milliseconds(100))
 				logger.info("Calling server.stop()")

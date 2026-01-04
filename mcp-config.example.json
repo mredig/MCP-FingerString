@@ -1,7 +1,7 @@
 {
 	"mcpServers": {
-		"<#mcp-server#>": {
-			"command": "/path/to/<#MCP-Server#>/.build/debug/<#mcp-server#>",
+		"fingerstring": {
+			"command": "/path/to/fingerstring/.build/debug/fingerstring",
 			"args": [],
 			"env": {}
 		}
