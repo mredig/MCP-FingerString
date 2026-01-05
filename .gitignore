@@ -122,3 +122,4 @@ DerivedData
 
 # MCP specific
 mcp-server.log
+*.profraw

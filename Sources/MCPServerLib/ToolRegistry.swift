@@ -15,7 +15,10 @@ enum ToolRegistry {
 	static let registeredTools: [ToolCommand: any ToolImplementation.Type] = [
 		.listAll: ListAllTool.self,
 		.listCreate: ListCreateTool.self,
-		// Add your custom tools here:
-		// .myTool: MyTool.self,
+		.listDelete: ListDeleteTool.self,
+		.listView: ListViewTool.self,
+		.taskAdd: TaskAddTool.self,
+		.taskComplete: TaskCompleteToggleTool.self,
+		.taskDelete: TaskDeleteTool.self,
 	]
 }
