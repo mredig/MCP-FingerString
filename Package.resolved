@@ -1,5 +1,5 @@
 {
-  "originHash" : "bc0c4755b9c116501a8ae91357b563bb482bb3a45aa3e51083b3a61965b282e0",
+  "originHash" : "66afd02086f67a7fa1629fb2e3f14a3c3277e1a4568ccc236355c93ae56b0d35",
   "pins" : [
     {
       "identity" : "eventsource",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mredig/FingerString.git",
       "state" : {
-        "revision" : "034af83c1677bd0cbbe84e40825874ffbf235e95",
-        "version" : "0.0.3"
+        "revision" : "954479dc2282a1c482c7d829517dca772eb61801",
+        "version" : "0.0.4"
       }
     },
     {
