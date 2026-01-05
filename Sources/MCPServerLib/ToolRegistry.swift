@@ -20,5 +20,7 @@ enum ToolRegistry {
 		.taskAdd: TaskAddTool.self,
 		.taskComplete: TaskCompleteToggleTool.self,
 		.taskDelete: TaskDeleteTool.self,
+		.taskView: TaskViewTool.self,
+		.taskEdit: TaskEditTool.self,
 	]
 }

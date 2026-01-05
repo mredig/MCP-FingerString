@@ -69,7 +69,7 @@ struct ListViewTool: ToolImplementation {
 		let id: String
 		let label: String
 		let isComplete: Bool
-		let note: String?
+		let hasNote: Bool
 		let subtasks: [TaskOutput]?
 	}
 
@@ -104,7 +104,7 @@ struct ListViewTool: ToolImplementation {
 			id: task.itemHashId,
 			label: task.label,
 			isComplete: task.isComplete,
-			note: task.note,
+			hasNote: task.note != nil,
 			subtasks: subtasks)
 	}
 }
