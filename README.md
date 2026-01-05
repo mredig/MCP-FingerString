@@ -1,271 +1,162 @@
 # MCP-FingerString
 
-A minimal, well-structured Swift MCP (Model Context Protocol) server template.
+A Swift MCP (Model Context Protocol) server for task list management, exposing FingerString's task operations as MCP tools and prompts.
 
 ## TLDR - Quick Start
 
-**Install via Homebrew:** (macOS only)
-Use brew to get the [pizza tool package](https://github.com/mredig/homebrew-pizza-mcp-tools), containing this (and other tools). (this is optimistic that the tool will be included in these tools)
+**Install via Homebrew:**
+Use brew to get the [pizza tool package](https://github.com/mredig/homebrew-pizza-mcp-tools), containing this (and other tools).
 
 ```bash
-brew tap <#YOUR_GITHUB_USERNAME#>/pizza-mcp-tools
+brew tap mredig/pizza-mcp-tools
 brew update
-brew install fingerstring
+brew install mcp-fingerstring
 ```
 
 **Or build from source:**
 ```bash
-# Clone and build
-git clone <your-repo-url>
+git clone https://github.com/mredig/MCP-FingerString.git
 cd MCP-FingerString
-swift build
+swift build -c release
 ```
 
-**Add to Zed settings** (`~/.config/zed/settings.json`): (recommended)
-
-(In Zed, `Add Custom Server` and provide the following snippet)
+**Add to Zed settings** (`~/.config/zed/settings.json`):
 ```json
 {
-  /// The name of your MCP server
   "fingerstring": {
-    /// The command which runs the MCP server
-    "command": "fingerstring", // if building yourself, you'll need to provide the whole path
-    /// The arguments to pass to the MCP server
+    "command": "mcp-fingerstring",
     "args": [],
-    /// The environment variables to set
     "env": {}
   }
 }
 ```
 
-**or Claude Desktop**
+**Or Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 ```json
-# Add to Claude Desktop config at:
-# ~/Library/Application Support/Claude/claude_desktop_config.json
 {
   "mcpServers": {
     "fingerstring": {
-    "command": "/path/to/fingerstring/.build/debug/fingerstring"
+      "command": "/path/to/mcp-fingerstring"
     }
   }
 }
-
-# Restart Claude Desktop - you're done!
 ```
 
-## Branding the Template
+## What It Does
 
-This is a generic MCP server template. To customize it for your specific project, replace the following placeholder strings throughout the codebase:
+Access and manage your task lists from within Claude or Zed. Use natural language to organize tasks, create subtasks, and manage your workflow without leaving your AI assistant.
 
-### String Replacements
+**Common workflows:**
+- "Create a project list for the new feature and add all the subtasks we discussed"
+- "Show me all incomplete tasks across my lists"
+- "Update the task about database migration with the new approach we discussed"
+- "What tasks are blocking progress on the authentication feature?"
 
-| Find | Replace With |
-|------|--------------|
-| `fingerstring` | Your executable name (e.g., `mcp-fingerstring`) |
-| `MCPServer` | Your module name in PascalCase (e.g., `MCPFingerString`) |
-| `MCPServerLib` | Your library module name (e.g., `MCPFingerStringLib`) |
-| `MCP-FingerString` | Your display name (e.g., `MCP-FingerString`) |
-| `pizza.appsby.mcp-fingerstring` | Your reverse domain identifier (e.g., `com.fingerstring.mcp`) |
-| `mcp-fingerstring://` | Your custom URI scheme (e.g., `fingerstring://`) |
+The AI automatically uses these tools to understand your task structure and help you stay organized.
 
-### Quick Find and Replace
+## Available Tools
 
-Use this command to find all instances of the template strings:
+### List Tools
+- **`list-view`** - View a list with all tasks and subtasks (recursive display)
+- **`list-create`** - Create a new task list
+- **`list-delete`** - Delete a list
+- **`list-all`** - Show all lists
 
-```bash
-# Find all occurrences of "fingerstring"
-grep -r "mcp-server" --include="*.swift" --include="*.json" --include="Makefile" --include="README.md" Sources/ Tests/ *.json Makefile README.md 2>/dev/null
+### Task Tools
+- **`task-view`** - View task details including all subtasks
+- **`task-add`** - Add a task to a list or as a subtask
+- **`task-edit`** - Edit task label or note
+- **`task-delete`** - Delete a task
+- **`task-complete`** - Mark task complete/incomplete
 
-# Find all occurrences of "MCPServer"
-grep -r "MCPServer" --include="*.swift" Sources/ Tests/ 2>/dev/null
+### Prompts
 
-# Find all occurrences of "pizza.appsby.mcp-fingerstring"
-grep -r "com.mcp-server" --include="*.swift" Sources/ Tests/ 2>/dev/null
-```
+Currently stashed (not yet working in MCP protocol). Use the template below instead:
 
-### Files to Update
+## System Prompt Template
 
-The following files typically need customization:
-
-1. **Package.swift** - Update package name `fingerstring`, product name `fingerstring`, and target names
-2. **README.md** - Update title, description, and examples (especially the `<#..#>` placeholders)
-3. **Makefile** - Update executable name `fingerstring` and version display
-4. **mcp-config.example.json** - Update server identifier `fingerstring` and command path
-5. **Sources/MCPServerLib/Support/Entrypoint.swift** - Update server name `fingerstring` and logger labels `pizza.appsby.mcp-fingerstring`
-6. **Sources/MCPServerLib/Support/ServerHandlers.swift** - Update logger labels `pizza.appsby.mcp-fingerstring` and resource URIs `mcp-fingerstring://`
-7. **Sources/MCPServer/MCPMain.swift** - Update struct name and imports
-8. **Tests/MCPServerTests/** - Update class names, imports, and assertions
-
-### Example: Branding for "FingerString"
-
-```bash
-# In your project directory, use sed to replace strings (macOS)
-find . -type f \( -name "*.swift" -o -name "*.json" -o -name "Makefile" -o -name "README.md" \) -exec sed -i '' \
-  -e 's/fingerstring/mcp-fingerstring/g' \
-  -e 's/MCPServer/MCPFingerString/g' \
-  -e 's/MCPServerLib/MCPFingerStringLib/g' \
-  -e 's/MCP-FingerString/MCP-FingerString/g' \
-  -e 's/<#com\.mcp-server#>/com.fingerstring/g' \
-  -e 's/<#mcp-server:\/\/#>/fingerstring:\/\//g' \
-  {} +
-```
-
-Or use your IDE's find-and-replace feature for a more interactive approach.
-
-## Adding Your Own Tools
-
-1. **Create a new file** in `Sources/MCPServerLib/ToolImplementations/`
-2. **Extend `ToolCommand`** with your command name
-3. **Implement `ToolImplementation` protocol**
-4. **Add to registry** in `ToolRegistry.swift`
-
-### Example: Adding a Calculator Tool
-
-```swift
-// CalculatorTool.swift
-import MCP
-import Foundation
-
-extension ToolCommand {
-    static let calculate = ToolCommand(rawValue: "calculate")
-}
-
-struct CalculatorTool: ToolImplementation {
-    static let command: ToolCommand = .calculate
-    
-    // JSON Schema reference: https://json-schema.org/understanding-json-schema/reference
-    static let tool = Tool(
-        name: command.rawValue,
-        description: "Performs basic arithmetic operations",
-        inputSchema: .object([
-            "type": "object",
-            "properties": .object([
-                "operation": .object([
-                    "type": "string",
-                    "enum": .array([.string("add"), .string("subtract"), .string("multiply"), .string("divide")]),
-                    "description": "The operation to perform"
-                ]),
-                "a": .object([
-                    "type": "number",
-                    "description": "First number"
-                ]),
-                "b": .object([
-                    "type": "number",
-                    "description": "Second number"
-                ])
-            ]),
-            "required": .array([.string("operation"), .string("a"), .string("b")])
-        ])
-    )
-    
-    let operation: String
-    let a: Double
-    let b: Double
-    
-    init(arguments: CallTool.Parameters) throws(ContentError) {
-        guard let operation = arguments.strings.operation else {
-            throw .missingArgument("operation")
-        }
-        guard let a = arguments.doubles.a else {
-            throw .missingArgument("a")
-        }
-        guard let b = arguments.doubles.b else {
-            throw .missingArgument("b")
-        }
-        
-        self.operation = operation
-        self.a = a
-        self.b = b
-    }
-    
-    func callAsFunction() async throws(ContentError) -> CallTool.Result {
-        let result: Double
-        switch operation {
-        case "add": result = a + b
-        case "subtract": result = a - b
-        case "multiply": result = a * b
-        case "divide":
-            guard b != 0 else {
-                throw .contentError(message: "Division by zero")
-            }
-            result = a / b
-        default:
-            throw .contentError(message: "Unknown operation: \(operation)")
-        }
-        
-        let output = StructuredContentOutput(
-            inputRequest: "\(operation): \(a) and \(b)",
-            metaData: nil,
-            content: [["result": result]])
-        
-        return output.toResult()
-    }
-}
-```
-
-Then add to `ToolRegistry.swift`:
-```swift
-static let registeredTools: [ToolCommand: any ToolImplementation.Type] = [
-    .echo: EchoTool.self,
-    .getTimestamp: GetTimestampTool.self,
-    .calculate: CalculatorTool.self,  // ← Add your tool here
-]
-```
-
-That's it! Rebuild and your tool is available.
-
-## Project Structure
+Add this to your system prompt or use as a custom instruction to guide the LLM's use of FingerString:
 
 ```
-MCP-Server/
-├── Sources/MCPServerLib/
-│   ├── ToolRegistry.swift              ← Register your tools here
-│   ├── ToolCommand.swift                ← Tool command constants
-│   ├── ToolImplementations/             ← Put your tools here
-│   │   ├── ToolImplementation.swift     ← Protocol definition
-│   │   ├── EchoTool.swift               ← Example tool
-│   │   └── GetTimestampTool.swift       ← Example tool
-│   └── Support/                         ← Implementation details (don't need to modify)
-│       ├── ServerHandlers.swift
-│       ├── ToolSupport.swift
-│       └── ...
+You have access to FingerString, a task management tool. Use it throughout our conversation to track work, keep notes, and maintain context across multiple interactions. (If you do not have access to these tools, notify the user as it is likely a permissions issue)
+
+Task Management Guidelines:
+
+1. **Create Lists as Projects**
+   - Create a list for each major project or goal
+   - Think of lists as projects, or even sub-projects within larger projects
+   - Communicate the list name to the user when creating
+
+2. **Add Tasks with Clear Success Criteria**
+   - Keep task labels short (max ~10 words)
+   - In task notes, include:
+     - What constitutes success for this task
+     - Any important details or context
+     - Constraints or dependencies
+   - Use tasks as persistent notes for ideas not yet ready to implement
+
+3. **Structure with Subtasks**
+   - Break large tasks into subtasks
+   - Keep the hierarchy logical and navigable
+   - Use subtasks to track implementation steps
+
+4. **Track Progress**
+   - Before completing a task, view it to verify success criteria are met
+   - Only mark complete when genuinely finished
+   - Periodically check task lists to stay aligned with goals
+
+5. **Persistent Knowledge**
+   - Use FingerString instead of relying solely on context window
+   - Tasks persist across conversations and contexts
+   - Important information stays structured and retrievable
+   - Capture insights, patterns, and reminders that might otherwise be lost
+
+6. **User Control**
+   - The user can manage tasks via CLI commands if preferred
+   - Respect their task structure and only modify as directed
+   - Always communicate changes clearly
+   - **IMPORTANT: List and task deletion is irreversible. Never delete without explicit user permission.**
+
+7. **Deletion is Permanent**
+   - `list-delete` and `task-delete` operations cannot be undone
+   - Never assume permission to delete - always ask explicitly
+   - When deletion is necessary, confirm with the user and summarize what will be lost
 ```
 
-## Tool Implementation Pattern
+**How to use:**
+1. Copy the template above
+2. Add it to your system prompt or Claude instructions
+3. The LLM will automatically use FingerString to track work throughout conversations
 
-Every tool follows the same pattern:
+## Usage Examples
 
-1. **Extend `ToolCommand`** - Define your command identifier
-2. **Define `static let tool`** - MCP Tool definition with JSON Schema
-3. **Extract parameters in `init`** - Validate and convert to typed properties
-4. **Implement `callAsFunction`** - Your tool's business logic
+Ask natural language questions in Claude or Zed's assistant:
 
-### Parameter Extraction
+**"Create a list called 'Website Redesign' and break it into subtasks for design, frontend, and backend"**
+- Uses `list-create` and `task-add` to structure the project
 
-Use the `ParamLookup` helpers to extract typed parameters:
+**"Show me all my tasks and help me prioritize what to work on next"**
+- Uses `list-view` and `list-all` to understand your current workload
 
-```swift
-arguments.strings.myStringParam    // String?
-arguments.integers.myIntParam      // Int?
-arguments.doubles.myDoubleParam    // Double?
-arguments.bools.myBoolParam        // Bool?
-```
+**"Update the authentication task with the security requirements we just discussed"**
+- Uses `task-edit` to keep your tasks current
 
-### Error Handling
+**"What subtasks are blocking the v2.0 release?"**
+- Uses `list-view` to find incomplete tasks and identify blockers
 
-Throw `ContentError` for all tool errors:
+## For Developers
 
-```swift
-throw .missingArgument("paramName")
-throw .mismatchedType(argument: "paramName", expected: "string")
-throw .initializationFailed("custom message")
-throw .contentError(message: "custom error")
-throw .other(someError)
-```
+Want to add your own tools? The codebase uses a clean registry pattern:
+
+1. Create tool in `Sources/MCPServerLib/ToolImplementations/`
+2. Implement `ToolImplementation` protocol  
+3. Register in `ToolRegistry.swift`
+
+See existing tools for examples. Each follows the same pattern: define schema, extract parameters, implement logic.
 
 ## Requirements
 
-- Swift 6.0+
+- Swift 6.0+ (development)
 - macOS 13.0+
 
 ## Testing
@@ -274,23 +165,30 @@ throw .other(someError)
 swift test
 ```
 
-## Included Examples
+## Technical Usage (for MCP clients)
 
-### Tools
-- `echo` - Echoes a message back (demonstrates parameter handling)
-- `get-timestamp` - Returns current ISO 8601 timestamp (demonstrates no-parameter tools)
+If you're using this with other MCP clients:
 
-### Resources
-- `mcp-server://status` - Server status (JSON)
-- `mcp-server://welcome` - Welcome message (text)
-- `mcp-server://config` - Server configuration (JSON)
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "fingerstring": {
+      "command": "mcp-fingerstring"
+    }
+  }
+}
+```
+
+**Other MCP Clients:** Point to the `mcp-fingerstring` binary and use the tools via their JSON-RPC interface.
+
+## Related Projects
+
+- **[FingerString](https://github.com/mredig/FingerString)** - CLI tool for task management. Use the MCP server above to integrate with Claude/Zed, or use the CLI directly for local management.
 
 ## Resources
 
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [MCP Swift SDK](https://github.com/modelcontextprotocol/swift-sdk)
 - [JSON Schema Reference](https://json-schema.org/understanding-json-schema/reference)
-
-## License
-
-MIT License
+- [Homebrew Package](https://github.com/mredig/homebrew-pizza-mcp-tools)
