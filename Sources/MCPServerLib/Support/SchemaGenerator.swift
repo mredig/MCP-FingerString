@@ -5,11 +5,11 @@ struct SchemaGenerator {
 	let properties: [String: SchemaType]
 
 	struct StringSchema: Generator {
-		var defaultValue: String?
 		var description: String?
+		var isRequired: Bool = false
+		var defaultValue: String?
 		var validEnumCases: [String]?
 
-		var isRequired: Bool = false
 		var minLength: Int?
 		var maxLength: Int?
 		var regexPattern: String?
@@ -47,10 +47,10 @@ struct SchemaGenerator {
 	}
 
 	struct BooleanSchema: Generator {
-		var defaultValue: Bool?
 		var description: String?
-
 		var isRequired: Bool = false
+		var defaultValue: Bool?
+
 
 		func asValue() -> Value {
 			var builder: [String: Value] = [:]
@@ -69,10 +69,10 @@ struct SchemaGenerator {
 	}
 
 	struct NumberSchema: Generator {
-		var defaultValue: Double?
 		var description: String?
-
 		var isRequired: Bool = false
+		var defaultValue: Double?
+
 		var isInteger: Bool
 		var minimum: Double?
 		var maximum: Double?
@@ -121,11 +121,11 @@ struct SchemaGenerator {
 	}
 
 	struct ArraySchema: Generator {
-		var defaultValue: [DefaultValue]?
 		var description: String?
+		var isRequired: Bool = false
+		var defaultValue: [DefaultValue]?
 		var item: SchemaType?
 
-		var isRequired: Bool = false
 		var minItems: Int?
 		var maxItems: Int?
 		var uniqueItems: Bool?
@@ -174,9 +174,9 @@ struct SchemaGenerator {
 	}
 
 	struct ObjectSchema: Generator {
-		var defaultValue: [String: DefaultValue]?
 		var description: String?
 		var isRequired: Bool = false
+		var defaultValue: [String: DefaultValue]?
 		var properties: [String: SchemaType]?
 
 		var additionalProperties: Bool?

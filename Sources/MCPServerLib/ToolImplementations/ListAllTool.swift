@@ -16,8 +16,8 @@ struct ListAllTool: ToolImplementation {
 			properties: [
 				"includeDescriptions": .boolean(
 					.init(
-						defaultValue: false,
-						description: "Whether or not to output additional description context with the lists, when they contain anything"))
+						description: "Whether or not to output additional description context with the lists, when they contain anything",
+						defaultValue: false))
 			]
 		).outputSchema)
 
