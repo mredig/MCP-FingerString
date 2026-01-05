@@ -19,7 +19,7 @@ jobs:
 
       - name: Build universal binary
         run: |
-          xcodebuild -scheme mcp-fingerstring -configuration Release -destination 'platform=macOS' ONLY_ACTIVE_ARCH=NO -derivedDataPath ./DerivedData
+          xcodebuild -scheme MCP-FingerString -configuration Release -destination 'platform=macOS' ONLY_ACTIVE_ARCH=NO -derivedDataPath ./DerivedData
           mkdir -p ./build
           cp ./DerivedData/Build/Products/Release/mcp-fingerstring ./build/mcp-fingerstring
 
