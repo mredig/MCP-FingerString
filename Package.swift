@@ -14,7 +14,7 @@ let package = Package(
     ],
     products: [
         .executable(
-            name: "fingerstring",
+            name: "mcp-fingerstring",
             targets: ["MCPServer"]
         ),
     ],
@@ -27,7 +27,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-log.git", from: "1.5.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.6.2"),
         .package(url: "https://github.com/mredig/SwiftPizzaSnips.git", from: "0.4.38"),
-        .package(url: "https://github.com/mredig/FingerString.git", branch: "0.0.1"),
+        .package(url: "https://github.com/mredig/FingerString.git", from: "0.0.2"),
     ],
     targets: [
 		.target(
