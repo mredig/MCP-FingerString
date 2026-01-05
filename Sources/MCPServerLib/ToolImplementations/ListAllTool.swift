@@ -11,14 +11,13 @@ struct ListAllTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "Lists all the stored lists.",
+		description: "FingerString: Lists all the stored lists.",
 		inputSchema: SchemaGenerator(
 			properties: [
 				"includeDescriptions": .boolean(
 					.init(
 						defaultValue: false,
-						description: "Whether or not to output additional description context with the lists, when they contain anything",
-						isRequired: false))
+						description: "Whether or not to output additional description context with the lists, when they contain anything"))
 			]
 		).outputSchema)
 
