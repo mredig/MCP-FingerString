@@ -20,7 +20,7 @@ jobs:
       - name: Build universal binary
         run: |
           xcodebuild -scheme MCP-FingerString -configuration Release -destination 'platform=macOS' ONLY_ACTIVE_ARCH=NO
-          DERIVED_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "MCP_FingerString-*" -type d -maxdepth 1 | head -1)
+          DERIVED_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "mcp_fingerstring-*" -type d -maxdepth 1 | head -1)
           mkdir -p ./build
           cp "$DERIVED_DATA/Build/Products/Release/mcp-fingerstring" ./build/mcp-fingerstring
 
