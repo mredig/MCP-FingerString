@@ -11,21 +11,18 @@ struct TaskDeleteTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Delete a task",
+		description: "FingerString: Delete a task. USE WITH EXTREME CAUTION: Never delete a task without confirming with the user first as this is destructive and CANNOT be recovered. You probably want to just mark it as completed.",
 		inputSchema: SchemaGenerator(properties: [
 			"hashID": .string(.init(description: "Hash ID of the task to delete", isRequired: true)),
-			"force": .boolean(.init(description: "Skip confirmation prompt", defaultValue: false))
 		]).outputSchema)
 
 	private let hashID: String
-	private let force: Bool
 
 	init(arguments: CallTool.Parameters) throws(ContentError) {
 		guard
 			let hashID = arguments.strings.hashID
 		else { throw .missingArgument("hashID") }
 		self.hashID = hashID
-		self.force = arguments.bools.force ?? false
 	}
 
 	func callAsFunction() async throws(ContentError) -> CallTool.Result {

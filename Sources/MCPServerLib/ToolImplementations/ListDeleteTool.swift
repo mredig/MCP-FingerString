@@ -11,21 +11,18 @@ struct ListDeleteTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Deletes a list by slug",
+		description: "FingerString: Deletes a list by slug. USE WITH EXTREME CAUTION: Never delete a list without confirming with the user first as this is destructive and CANNOT be recovered.",
 		inputSchema: SchemaGenerator(properties: [
 			"slug": .string(.init(description: "Slug of the list to delete", isRequired: true)),
-			"force": .boolean(.init(description: "Skip confirmation prompt", defaultValue: false))
 		]).outputSchema)
 
 	private let slug: String
-	private let force: Bool
 
 	init(arguments: CallTool.Parameters) throws(ContentError) {
 		guard
 			let slug = arguments.strings.slug
 		else { throw .missingArgument("slug") }
 		self.slug = slug
-		self.force = arguments.bools.force ?? false
 	}
 
 	func callAsFunction() async throws(ContentError) -> CallTool.Result {
