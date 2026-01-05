@@ -5,14 +5,14 @@ struct SchemaGenerator {
 	let properties: [String: SchemaType]
 
 	struct StringSchema: Generator {
-		let defaultValue: String?
-		let description: String?
-		let validEnumCases: [String]?
+		var defaultValue: String?
+		var description: String?
+		var validEnumCases: [String]?
 
-		let isRequired: Bool
-		let minLength: Int?
-		let maxLength: Int?
-		let regexPattern: String?
+		var isRequired: Bool = false
+		var minLength: Int?
+		var maxLength: Int?
+		var regexPattern: String?
 
 		func asValue() -> Value {
 			var builder: [String: Value] = [:]
@@ -47,10 +47,10 @@ struct SchemaGenerator {
 	}
 
 	struct BooleanSchema: Generator {
-		let defaultValue: Bool?
-		let description: String?
+		var defaultValue: Bool?
+		var description: String?
 
-		let isRequired: Bool
+		var isRequired: Bool = false
 
 		func asValue() -> Value {
 			var builder: [String: Value] = [:]
@@ -69,16 +69,16 @@ struct SchemaGenerator {
 	}
 
 	struct NumberSchema: Generator {
-		let defaultValue: Double?
-		let description: String?
+		var defaultValue: Double?
+		var description: String?
 
-		let isRequired: Bool
-		let isInteger: Bool
-		let minimum: Double?
-		let maximum: Double?
-		let exclusiveMin: Double?
-		let exclusiveMax: Double?
-		let multipleOf: Double?
+		var isRequired: Bool = false
+		var isInteger: Bool
+		var minimum: Double?
+		var maximum: Double?
+		var exclusiveMin: Double?
+		var exclusiveMax: Double?
+		var multipleOf: Double?
 
 		func asValue() -> Value {
 			var builder: [String: Value] = [:]
@@ -121,14 +121,14 @@ struct SchemaGenerator {
 	}
 
 	struct ArraySchema: Generator {
-		let defaultValue: [DefaultValue]?
-		let description: String?
-		let item: SchemaType?
+		var defaultValue: [DefaultValue]?
+		var description: String?
+		var item: SchemaType?
 
-		let isRequired: Bool
-		let minItems: Int?
-		let maxItems: Int?
-		let uniqueItems: Bool?
+		var isRequired: Bool = false
+		var minItems: Int?
+		var maxItems: Int?
+		var uniqueItems: Bool?
 
 		func asValue() -> Value {
 			var builder: [String: Value] = [:]
@@ -174,12 +174,12 @@ struct SchemaGenerator {
 	}
 
 	struct ObjectSchema: Generator {
-		let defaultValue: [String: DefaultValue]?
-		let description: String?
-		let isRequired: Bool
-		let properties: [String: SchemaType]?
+		var defaultValue: [String: DefaultValue]?
+		var description: String?
+		var isRequired: Bool = false
+		var properties: [String: SchemaType]?
 
-		let additionalProperties: Bool?
+		var additionalProperties: Bool?
 
 		func asValue() -> Value {
 			var builder: [String: Value] = [:]
