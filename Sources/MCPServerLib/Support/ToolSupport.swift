@@ -1,4 +1,5 @@
 import MCP
+import SwiftPizzaSnips
 import Foundation
 
 // MARK: - Structured Output Helper
@@ -45,10 +46,14 @@ struct StructuredContentOutput<Content: Codable & Sendable>: Codable, Sendable {
 
 // MARK: - Content Error
 
-enum ContentError: Error {
+enum ContentError: WrappingError {
 	case missingArgument(String)
 	case mismatchedType(argument: String, expected: String)
 	case initializationFailed(String)
 	case contentError(message: String?)
 	case other(Error)
+
+	static func wrap(_ anyError: any Error) -> ContentError {
+		.other(anyError)
+	}
 }

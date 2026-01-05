@@ -13,8 +13,9 @@ enum ToolRegistry {
 	/// Add your custom tool types here to make them available to the MCP server.
 	/// The key is the tool's command, the value is the tool implementation type.
 	static let registeredTools: [ToolCommand: any ToolImplementation.Type] = [
-		.echo: EchoTool.self,
-		.getTimestamp: GetTimestampTool.self,
+//		.echo: EchoTool.self,
+//		.getTimestamp: GetTimestampTool.self,
+		.listAll: ListAllTool.self,
 		// Add your custom tools here:
 		// .myTool: MyTool.self,
 	]
