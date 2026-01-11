@@ -1,5 +1,5 @@
 {
-  "originHash" : "66afd02086f67a7fa1629fb2e3f14a3c3277e1a4568ccc236355c93ae56b0d35",
+  "originHash" : "92f1ef26b40f0a6725ea781fc362dc3b8b50e6d69424679d17c9e95186b6b403",
   "pins" : [
     {
       "identity" : "eventsource",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mredig/FingerString.git",
       "state" : {
-        "revision" : "954479dc2282a1c482c7d829517dca772eb61801",
-        "version" : "0.0.4"
+        "revision" : "b782857aa5f256cc598afaef1cdcd5805ea2e99a",
+        "version" : "0.0.5"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mredig/SwiftPizzaSnips.git",
       "state" : {
-        "revision" : "4c37a61bf37834d7dd055c389b4f7607c6f7fdac",
-        "version" : "0.4.38"
+        "revision" : "64b0104dd5b657b4e6f12248a0c8fd7397ea7204",
+        "version" : "0.5.0"
       }
     }
   ],
