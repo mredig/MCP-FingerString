@@ -45,7 +45,8 @@ struct ListAllTool: ToolImplementation {
 		let output = StructuredContentOutput(
 			inputRequest: Self.command.rawValue,
 			metaData: nil,
-			content: listOutput)
+			content: listOutput,
+			userMessage: nil)
 
 		return output.toResult()
 	}

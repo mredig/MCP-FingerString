@@ -11,7 +11,7 @@ struct ListCreateTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Creates a list of reminders or tasks",
+		description: "FingerString: Creates a list of reminders or tasks. ***IMPORTANT*** Immediately after using this tool, inform the user what list was created.",
 		inputSchema: SchemaGenerator(properties: [
 			"slug": .string(.init(description: "Slug for the list (alphanumeric, dots, dashes, underscores)", isRequired: true)),
 			"title": .string(.init(description: "Friendly, human readable title for the list")),
@@ -38,10 +38,14 @@ struct ListCreateTool: ToolImplementation {
 			try await controller.createList(with: slug, friendlyTitle: title, description: description)
 		}
 
+		let listName = title ?? createdList.slug
+		let userMessage = "Created list '\(listName)' with slug '\(createdList.slug)'"
+
 		return StructuredContentOutput(
 			inputRequest: "\(self)",
 			metaData: nil,
-			content: ["Created list with slug '\(createdList.slug)'"])
+			content: [userMessage],
+			userMessage: userMessage)
 		.toResult()
 	}
 }

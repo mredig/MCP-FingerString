@@ -11,7 +11,7 @@ struct TaskCompleteToggleTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Mark or unmark a task as completed",
+		description: "FingerString: Mark or unmark a task as completed. Immediately after using this tool, inform the user which task was marked complete or incomplete.",
 		inputSchema: SchemaGenerator(properties: [
 			"hashID": .string(.init(description: "Hash ID of the task", isRequired: true)),
 			"mark": .boolean(.init(description: "Whether to mark as completed", defaultValue: true))
@@ -43,11 +43,13 @@ struct TaskCompleteToggleTool: ToolImplementation {
 		}
 
 		let completionSlug = updated.isComplete ? "completed" : "incomplete"
+		let userMessage = "Marked task '\(updated.label)' [\(updated.itemHashId)] as \(completionSlug)"
 
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(hashID)",
 			metaData: nil,
-			content: ["Marked task [\(updated.itemHashId)] (\(updated.label)) as \(completionSlug)"])
+			content: [userMessage],
+			userMessage: userMessage)
 		.toResult()
 	}
 }

@@ -51,7 +51,8 @@ struct TaskViewTool: ToolImplementation {
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(hashID)",
 			metaData: nil,
-			content: [detail])
+			content: [detail],
+			userMessage: nil)
 		.toResult()
 	}
 }

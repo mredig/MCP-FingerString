@@ -11,7 +11,7 @@ struct TaskAddTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Add a task to a list or as a subtask. Use notes to add context and anything that might be helpful. As of this writing, tasks cannot be edited, so make sure to err on including too much detail in the note as you can't go back and add it (yet)",
+		description: "FingerString: Add a task to a list or as a subtask. Use notes to add context and anything that might be helpful. As of this writing, tasks cannot be edited, so make sure to err on including too much detail in the note as you can't go back and add it (yet). ***IMPORTANT*** Immediately after using this tool, inform the user what task was created and where it was added.",
 		inputSchema: SchemaGenerator(properties: [
 			"query": .string(.init(description: "Slug of the target list or hash ID of the parent task", isRequired: true)),
 			"queryType": .string(.init(description: "The type of the query. [slug|hashID]", isRequired: true, validEnumCases: ["slug", "hashID"])),
@@ -73,6 +73,16 @@ struct TaskAddTool: ToolImplementation {
 			let note: String?
 		}
 
+		let parentContext: String
+		switch query {
+		case .list(let slug):
+			parentContext = "to list '\(slug)'"
+		case .task(let hashID):
+			parentContext = "as a subtask of '\(hashID)'"
+		}
+
+		let userMessage = "Added task '\(task.label)' \(parentContext)"
+
 		return StructuredContentOutput(
 			inputRequest: "\(self)",
 			metaData: nil,
@@ -82,7 +92,8 @@ struct TaskAddTool: ToolImplementation {
 					label: task.label,
 					hashID: task.itemHashId,
 					note: task.note)
-			]).toResult()
+			],
+			userMessage: userMessage).toResult()
 
 	}
 }

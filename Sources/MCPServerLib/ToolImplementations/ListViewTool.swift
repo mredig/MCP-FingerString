@@ -61,7 +61,8 @@ struct ListViewTool: ToolImplementation {
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(slug)",
 			metaData: nil,
-			content: [Output(title: list.headerTitle, description: list.description, tasks: tasks)])
+			content: [Output(title: list.headerTitle, description: list.description, tasks: tasks)],
+			userMessage: nil)
 		.toResult()
 	}
 

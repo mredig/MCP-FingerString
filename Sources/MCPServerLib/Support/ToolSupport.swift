@@ -8,6 +8,7 @@ struct StructuredContentOutput<Content: Codable & Sendable>: Codable, Sendable {
 	let inputRequest: String
 	let metaData: Metadata?
 	let content: [Content]
+	let userMessage: String?
 
 	struct Metadata: Codable, Sendable {
 		let summary: String?
@@ -21,6 +22,10 @@ struct StructuredContentOutput<Content: Codable & Sendable>: Codable, Sendable {
 
 	func toResult() -> CallTool.Result {
 		var accumulator: [Tool.Content] = []
+
+		if let userMessage {
+			accumulator.append(.text("SUGGESTED_USER_MESSAGE: \(userMessage)"))
+		}
 
 		if let metaData {
 			let jsonString = try? Self.encodeToJSONString(metaData)

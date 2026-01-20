@@ -11,7 +11,7 @@ struct TaskDeleteTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Delete a task. USE WITH EXTREME CAUTION: Never delete a task without confirming with the user first as this is destructive and CANNOT be recovered. You probably want to just mark it as completed.",
+		description: "FingerString: Delete a task. USE WITH EXTREME CAUTION: Never delete a task without confirming with the user first as this is destructive and CANNOT be recovered. You probably want to just mark it as completed. ***IMPORTANT*** Immediately *before* using this tool, confirm with the user what is to be deleted!",
 		inputSchema: SchemaGenerator(properties: [
 			"hashID": .string(.init(description: "Hash ID of the task to delete", isRequired: true)),
 		]).outputSchema)
@@ -39,10 +39,13 @@ struct TaskDeleteTool: ToolImplementation {
 			try await controller.deleteTask(task.id)
 		}
 
+		let userMessage = "Deleted task '\(task.label)' [\(task.itemHashId)]"
+
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(hashID)",
 			metaData: nil,
-			content: ["Deleted \(task.label) [\(task.itemHashId)]"])
+			content: [userMessage],
+			userMessage: userMessage)
 		.toResult()
 	}
 }

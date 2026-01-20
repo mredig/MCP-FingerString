@@ -11,7 +11,7 @@ struct TaskEditTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Edit a task's attributes like label or note",
+		description: "FingerString: Edit a task's attributes like label or note. ***IMPORTANT*** Immediately after using this tool, inform the user what changes were made to the task.",
 		inputSchema: SchemaGenerator(properties: [
 			"hashID": .string(.init(description: "Hash ID of the task to edit", isRequired: true)),
 			"label": .string(.init(description: "New label for the task")),
@@ -61,10 +61,27 @@ struct TaskEditTool: ToolImplementation {
 			isComplete: updatedTask.isComplete,
 			note: updatedTask.note)
 
+		var changes: [String] = []
+		if label != nil {
+			changes.append("label to '\(updatedTask.label)'")
+		}
+		if note != nil {
+			changes.append("note")
+		}
+
+		let userMessage: String
+		if changes.isEmpty {
+			userMessage = "No changes to made to task '\(updatedTask.label)' [\(updatedTask.itemHashId)]"
+		} else {
+			let changesText = changes.isEmpty ? "task" : changes.joined(separator: " and ")
+			userMessage = "Updated \(changesText) for task '\(updatedTask.label)' [\(updatedTask.itemHashId)]"
+		}
+
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(hashID)",
 			metaData: nil,
-			content: [detail])
+			content: [detail],
+			userMessage: userMessage)
 		.toResult()
 	}
 }

@@ -11,7 +11,7 @@ struct ListDeleteTool: ToolImplementation {
 
 	static let tool = Tool(
 		name: command.rawValue,
-		description: "FingerString: Deletes a list by slug. USE WITH EXTREME CAUTION: Never delete a list without confirming with the user first as this is destructive and CANNOT be recovered.",
+		description: "FingerString: Deletes a list by slug. USE WITH EXTREME CAUTION: Never delete a list without confirming with the user first as this is destructive and CANNOT be recovered. ***IMPORTANT*** BEFORE using this tool, confirm with the user what is to be deleted!!!",
 		inputSchema: SchemaGenerator(properties: [
 			"slug": .string(.init(description: "Slug of the list to delete", isRequired: true)),
 		]).outputSchema)
@@ -39,10 +39,13 @@ struct ListDeleteTool: ToolImplementation {
 			try await controller.deleteList(list.id)
 		}
 
+		let userMessage = "Deleted list '\(list.headerTitle)' (slug: '\(slug)')"
+
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(slug)",
 			metaData: nil,
-			content: ["Deleted list '\(list.headerTitle)'"])
+			content: [userMessage],
+			userMessage: userMessage)
 		.toResult()
 	}
 }
