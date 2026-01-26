@@ -27,7 +27,8 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-log.git", from: "1.5.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.6.2"),
         .package(url: "https://github.com/mredig/SwiftPizzaSnips.git", from: "0.5.0"),
-        .package(url: "https://github.com/mredig/FingerString.git", from: "0.0.5"),
+//		.package(url: "https://github.com/mredig/FingerString.git", from: "0.0.7"),
+		.package(url: "https://github.com/mredig/FingerString.git", branch: "0.0.8"), // depends on an unstable branch for arg parser, so cannot use "from" package resolution
     ],
     targets: [
 		.target(

@@ -3,11 +3,11 @@ import FingerStringLib
 final class DBController: Sendable {
 	let controller: ListController
 
-	private init() {
-		self.controller = .init(db: ListController.defaultDB)
+	private init() throws {
+		self.controller = try ListController(dbLocation: Constants.defaultDBURL)
 	}
 
-	static let shared = DBController()
+	static let shared = try! DBController()
 
 	static var controller: ListController { shared.controller }
 }

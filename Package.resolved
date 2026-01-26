@@ -1,5 +1,5 @@
 {
-  "originHash" : "92f1ef26b40f0a6725ea781fc362dc3b8b50e6d69424679d17c9e95186b6b403",
+  "originHash" : "808207b081ae306e7f9e305c8caaf40c988efcd701ce04b7163c3a58dbb72700",
   "pins" : [
     {
       "identity" : "eventsource",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mredig/FingerString.git",
       "state" : {
-        "revision" : "b782857aa5f256cc598afaef1cdcd5805ea2e99a",
-        "version" : "0.0.5"
+        "branch" : "0.0.8",
+        "revision" : "7e29877cde0cbb76442475e2d4f95a90054cfd1c"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser.git",
       "state" : {
-        "revision" : "c5d11a805e765f52ba34ec7284bd4fcd6ba68615",
-        "version" : "1.7.0"
+        "branch" : "858-bash-shopt-no-history",
+        "revision" : "92e1d9da788aefa5a4f13fe1078f7f37f7de6ce2"
       }
     },
     {
