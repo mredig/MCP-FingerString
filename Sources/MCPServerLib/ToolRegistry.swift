@@ -14,9 +14,10 @@ enum ToolRegistry {
 	/// The key is the tool's command, the value is the tool implementation type.
 	static let registeredTools: [ToolCommand: any ToolImplementation.Type] = [
 		.listAll: ListAllTool.self,
+		.listView: ListViewTool.self,
+		.listInfo: ListInfoTool.self,
 		.listCreate: ListCreateTool.self,
 		.listDelete: ListDeleteTool.self,
-		.listView: ListViewTool.self,
 		.taskAdd: TaskAddTool.self,
 		.taskComplete: TaskCompleteToggleTool.self,
 		.taskDelete: TaskDeleteTool.self,
