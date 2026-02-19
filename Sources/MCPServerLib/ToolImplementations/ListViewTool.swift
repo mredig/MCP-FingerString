@@ -16,11 +16,16 @@ struct ListViewTool: ToolImplementation {
 			"slug": .string(.init(description: "Slug of the list to view", isRequired: true)),
 			"showCompletedTasks": .boolean(.init(description: "Whether to show completed tasks", defaultValue: false)),
 			"includeSubtasks": .boolean(.init(description: "Whether to show subtasks", defaultValue: true)),
+			"offset": .number(.init(description: "The task index to start at.", defaultValue: 0, isInteger: true)),
+			"limit": .number(.init(description: "How many tasks to allow showing", defaultValue: 25, isInteger: true)),
 		]).outputSchema)
 
 	private let slug: String
 	private let showCompletedTasks: Bool
 	private let includeSubtasks: Bool
+
+	private let limit: Int
+	private let offset: Int
 
 	init(arguments: CallTool.Parameters) throws(ContentError) {
 		guard
@@ -29,6 +34,8 @@ struct ListViewTool: ToolImplementation {
 		self.slug = slug
 		self.showCompletedTasks = arguments.bools.showCompletedTasks ?? false
 		self.includeSubtasks = arguments.bools.includeSubtasks ?? true
+		self.limit = arguments.integers.limit ?? 10
+		self.offset = arguments.integers.offset ?? 0
 	}
 
 	func callAsFunction() async throws(ContentError) -> CallTool.Result {
@@ -47,11 +54,17 @@ struct ListViewTool: ToolImplementation {
 
 		var tasks: [TaskOutput] = []
 
+		var currentIndex = 0
 		try await wrap(in: ContentError.self) {
 			for try await (_, task) in itemsStream {
 				guard task.isComplete == false || showCompletedTasks else { continue }
-				let output = try await buildTaskOutput(task, includeSubtasks: includeSubtasks, controller: controller)
-				tasks.append(output)
+				defer { currentIndex += 1 }
+				guard currentIndex >= offset else { continue }
+				if tasks.count < limit {
+					let output = try await buildTaskOutput(task, includeSubtasks: includeSubtasks, controller: controller)
+					tasks.append(output)
+				}
+				// otherwise, continue the count
 			}
 		}
 
@@ -63,7 +76,7 @@ struct ListViewTool: ToolImplementation {
 
 		return StructuredContentOutput(
 			inputRequest: "\(Self.command.rawValue): \(slug)",
-			metaData: nil,
+			metaData: .init(resultCount: currentIndex),
 			content: [Output(title: list.headerTitle, description: list.description, tasks: tasks)],
 			userMessage: nil)
 		.toResult()
