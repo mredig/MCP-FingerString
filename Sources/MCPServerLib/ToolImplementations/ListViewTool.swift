@@ -14,11 +14,13 @@ struct ListViewTool: ToolImplementation {
 		description: "FingerString: View a list and its items",
 		inputSchema: SchemaGenerator(properties: [
 			"slug": .string(.init(description: "Slug of the list to view", isRequired: true)),
-			"showCompletedTasks": .boolean(.init(description: "Whether to show completed tasks", defaultValue: false))
+			"showCompletedTasks": .boolean(.init(description: "Whether to show completed tasks", defaultValue: false)),
+			"includeSubtasks": .boolean(.init(description: "Whether to show subtasks", defaultValue: true)),
 		]).outputSchema)
 
 	private let slug: String
 	private let showCompletedTasks: Bool
+	private let includeSubtasks: Bool
 
 	init(arguments: CallTool.Parameters) throws(ContentError) {
 		guard
@@ -26,6 +28,7 @@ struct ListViewTool: ToolImplementation {
 		else { throw .missingArgument("slug") }
 		self.slug = slug
 		self.showCompletedTasks = arguments.bools.showCompletedTasks ?? false
+		self.includeSubtasks = arguments.bools.includeSubtasks ?? true
 	}
 
 	func callAsFunction() async throws(ContentError) -> CallTool.Result {
@@ -47,7 +50,7 @@ struct ListViewTool: ToolImplementation {
 		try await wrap(in: ContentError.self) {
 			for try await (_, task) in itemsStream {
 				guard task.isComplete == false || showCompletedTasks else { continue }
-				let output = try await buildTaskOutput(task, controller: controller)
+				let output = try await buildTaskOutput(task, includeSubtasks: includeSubtasks, controller: controller)
 				tasks.append(output)
 			}
 		}
@@ -72,16 +75,18 @@ struct ListViewTool: ToolImplementation {
 		let isComplete: Bool
 		let hasNote: Bool
 		let subtasks: [TaskOutput]?
+		let hasSubtasks: Bool?
 	}
 
 	private func buildTaskOutput(
 		_ task: TaskItem,
+		includeSubtasks: Bool,
 		controller: ListController
 	) async throws(ContentError) -> TaskOutput {
 
 		var subtasks: [TaskOutput]? = nil
 
-		if task.firstSubtaskId != nil {
+		if task.firstSubtaskId != nil && includeSubtasks {
 			let stream = try await wrap(in: ContentError.self) {
 				try await controller.getAllTasksStream(on: .task(hashID: task.itemHashId))
 			}
@@ -91,7 +96,7 @@ struct ListViewTool: ToolImplementation {
 				for try await (_, subtask) in stream {
 					guard task.isComplete == false || showCompletedTasks else { continue }
 
-					let output = try await buildTaskOutput(subtask, controller: controller)
+					let output = try await buildTaskOutput(subtask, includeSubtasks: true, controller: controller)
 					subArray.append(output)
 				}
 			}
@@ -106,6 +111,7 @@ struct ListViewTool: ToolImplementation {
 			label: task.label,
 			isComplete: task.isComplete,
 			hasNote: task.note != nil,
-			subtasks: subtasks)
+			subtasks: subtasks,
+			hasSubtasks: includeSubtasks == false && task.firstSubtaskId != nil)
 	}
 }
