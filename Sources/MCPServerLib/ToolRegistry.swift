@@ -23,5 +23,6 @@ enum ToolRegistry {
 		.taskDelete: TaskDeleteTool.self,
 		.taskView: TaskViewTool.self,
 		.taskEdit: TaskEditTool.self,
+		.taskMove: TaskMoveTool.self,
 	]
 }
